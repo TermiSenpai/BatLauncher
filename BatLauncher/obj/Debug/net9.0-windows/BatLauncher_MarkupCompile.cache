@@ -1,0 +1,20 @@
+﻿BatLauncher
+
+
+winexe
+C#
+.cs
+E:\Custom apps\BatLauncher\BatLauncher\obj\Debug\net9.0-windows\
+BatLauncher
+none
+false
+TRACE;DEBUG;NET;NET9_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NET9_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
+E:\Custom apps\BatLauncher\BatLauncher\App.xaml
+4-1543600634
+
+14-1116247342
+200-1531957912
+MainWindow.xaml;Resources\Theme.xaml;Views\EditDialog.xaml;Views\ToolbarWindow.xaml;
+
+False
+
