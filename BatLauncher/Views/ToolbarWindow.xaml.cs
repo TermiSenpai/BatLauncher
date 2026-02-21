@@ -88,13 +88,21 @@ public partial class ToolbarWindow : Window
 
         try
         {
-            var psi = new ProcessStartInfo
-            {
-                FileName = "cmd.exe",
-                Arguments = $"/c \"{entry.FilePath}\"",
-                WorkingDirectory = Path.GetDirectoryName(entry.FilePath) ?? "",
-                UseShellExecute = true
-            };
+            var ext = Path.GetExtension(entry.FilePath).ToLowerInvariant();
+            var psi = ext is ".bat" or ".cmd"
+                ? new ProcessStartInfo
+                {
+                    FileName = "cmd.exe",
+                    Arguments = $"/c \"{entry.FilePath}\"",
+                    WorkingDirectory = Path.GetDirectoryName(entry.FilePath) ?? "",
+                    UseShellExecute = true
+                }
+                : new ProcessStartInfo
+                {
+                    FileName = entry.FilePath,
+                    WorkingDirectory = Path.GetDirectoryName(entry.FilePath) ?? "",
+                    UseShellExecute = true
+                };
             Process.Start(psi);
         }
         catch (Exception ex)

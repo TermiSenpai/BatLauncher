@@ -45,8 +45,8 @@ public partial class EditDialog : Window
     {
         var dlg = new OpenFileDialog
         {
-            Title = "Select a .bat or .cmd file",
-            Filter = "Batch files (*.bat;*.cmd)|*.bat;*.cmd|All files (*.*)|*.*",
+            Title = "Select a file to launch",
+            Filter = "Supported files (*.bat;*.cmd;*.exe)|*.bat;*.cmd;*.exe|Batch files (*.bat;*.cmd)|*.bat;*.cmd|Executables (*.exe)|*.exe|All files (*.*)|*.*",
             CheckFileExists = true
         };
 
@@ -117,7 +117,7 @@ public partial class EditDialog : Window
 
         if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
         {
-            MessageBox.Show("Please select a valid .bat or .cmd file.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show("Please select a valid file.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
