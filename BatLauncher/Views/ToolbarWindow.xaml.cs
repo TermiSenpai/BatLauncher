@@ -13,6 +13,7 @@ public partial class ToolbarWindow : Window
 {
     private readonly MainViewModel _vm;
     private MainWindow? _managementWindow;
+    private bool _isShowingDialog;
 
     public ToolbarWindow(MainViewModel vm)
     {
@@ -22,6 +23,13 @@ public partial class ToolbarWindow : Window
 
         Loaded += OnLoaded;
         StateChanged += OnStateChanged;
+        Deactivated += OnDeactivated;
+    }
+
+    private void OnDeactivated(object? sender, EventArgs e)
+    {
+        if (_isShowingDialog) return;
+        WindowState = WindowState.Minimized;
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
@@ -34,12 +42,14 @@ public partial class ToolbarWindow : Window
     private void OnStateChanged(object? sender, EventArgs e)
     {
         if (WindowState == WindowState.Normal)
+        {
+            Topmost = true;
             PositionAboveTaskbar();
+        }
     }
 
     private void PositionAboveTaskbar()
     {
-        // Wait for layout to calculate size
         UpdateLayout();
 
         var workArea = SystemParameters.WorkArea;
@@ -114,16 +124,19 @@ public partial class ToolbarWindow : Window
 
     private void Add_Click(object sender, RoutedEventArgs e)
     {
+        _isShowingDialog = true;
         var entry = new BatEntry();
         var dlg = new EditDialog(entry, true);
         if (dlg.ShowDialog() == true && dlg.Result != null)
         {
             _vm.AddEntryDirect(dlg.Result);
         }
+        _isShowingDialog = false;
     }
 
     private void Manage_Click(object sender, RoutedEventArgs e)
     {
+        _isShowingDialog = true;
         if (_managementWindow == null || !_managementWindow.IsLoaded)
         {
             _managementWindow = new MainWindow(_vm);
@@ -136,6 +149,7 @@ public partial class ToolbarWindow : Window
             if (_managementWindow.WindowState == WindowState.Minimized)
                 _managementWindow.WindowState = WindowState.Normal;
         }
+        _isShowingDialog = false;
     }
 
     private void Close_Click(object sender, RoutedEventArgs e)
