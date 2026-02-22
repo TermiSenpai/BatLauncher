@@ -8,6 +8,8 @@ namespace BatLauncher.ViewModels;
 public class BatEntryViewModel : BaseViewModel
 {
     public BatEntry Model { get; }
+    private ImageSource? _cachedIcon;
+    private string? _cachedIconPath;
 
     public string Id => Model.Id;
 
@@ -26,7 +28,15 @@ public class BatEntryViewModel : BaseViewModel
     public string? IconPath
     {
         get => Model.IconPath;
-        set { Model.IconPath = value; OnPropertyChanged(); OnPropertyChanged(nameof(Icon)); OnPropertyChanged(nameof(HasIcon)); }
+        set
+        {
+            Model.IconPath = value;
+            _cachedIcon = null;
+            _cachedIconPath = null;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(Icon));
+            OnPropertyChanged(nameof(HasIcon));
+        }
     }
 
     public bool HasIcon => !string.IsNullOrEmpty(IconPath) && File.Exists(IconPath);
@@ -37,18 +47,23 @@ public class BatEntryViewModel : BaseViewModel
     {
         get
         {
+            if (string.IsNullOrEmpty(IconPath) || !File.Exists(IconPath))
+                return null;
+
+            if (_cachedIcon != null && _cachedIconPath == IconPath)
+                return _cachedIcon;
+
             try
             {
-                if (string.IsNullOrEmpty(IconPath) || !File.Exists(IconPath))
-                    return null;
-
                 var bitmap = new BitmapImage();
                 bitmap.BeginInit();
                 bitmap.UriSource = new Uri(IconPath, UriKind.Absolute);
                 bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                bitmap.DecodePixelWidth = 48;
+                bitmap.DecodePixelWidth = 36;
                 bitmap.EndInit();
                 bitmap.Freeze();
+                _cachedIcon = bitmap;
+                _cachedIconPath = IconPath;
                 return bitmap;
             }
             catch

@@ -13,15 +13,8 @@ public class MainViewModel : BaseViewModel
     private AppData _appData = new();
     private BatEntryViewModel? _selectedEntry;
     private string _searchText = string.Empty;
-    private ObservableCollection<BatEntryViewModel> _filteredEntries = [];
-
     public ObservableCollection<BatEntryViewModel> AllEntries { get; } = [];
-
-    public ObservableCollection<BatEntryViewModel> FilteredEntries
-    {
-        get => _filteredEntries;
-        set => SetField(ref _filteredEntries, value);
-    }
+    public ObservableCollection<BatEntryViewModel> FilteredEntries { get; } = [];
 
     public BatEntryViewModel? SelectedEntry
     {
@@ -171,18 +164,15 @@ public class MainViewModel : BaseViewModel
 
     private void ApplyFilter()
     {
-        if (string.IsNullOrWhiteSpace(_searchText))
-        {
-            FilteredEntries = new ObservableCollection<BatEntryViewModel>(AllEntries);
-        }
-        else
-        {
-            var lower = _searchText.ToLowerInvariant();
-            FilteredEntries = new ObservableCollection<BatEntryViewModel>(
-                AllEntries.Where(e =>
-                    e.Name.Contains(lower, StringComparison.CurrentCultureIgnoreCase) ||
-                    e.FilePath.Contains(lower, StringComparison.CurrentCultureIgnoreCase)));
-        }
+        FilteredEntries.Clear();
+        var source = string.IsNullOrWhiteSpace(_searchText)
+            ? AllEntries
+            : AllEntries.Where(e =>
+                e.Name.Contains(_searchText, StringComparison.CurrentCultureIgnoreCase) ||
+                e.FilePath.Contains(_searchText, StringComparison.CurrentCultureIgnoreCase));
+
+        foreach (var entry in source)
+            FilteredEntries.Add(entry);
     }
 
     public void AddEntryDirect(BatEntry entry)
