@@ -151,6 +151,7 @@ public class MainViewModel : BaseViewModel
                     UseShellExecute = true
                 };
             Process.Start(psi);
+            Application.Current.Shutdown();
         }
         catch (Exception ex)
         {

@@ -175,6 +175,7 @@ public partial class ToolbarWindow : Window
                     UseShellExecute = true
                 };
             Process.Start(psi);
+            Application.Current.Shutdown();
         }
         catch (Exception ex)
         {
